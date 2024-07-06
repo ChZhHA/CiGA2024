@@ -41,15 +41,9 @@ export default function PlayArea() {
 
     const startGame = () => {
         const deltaTime = data.current.water * options.playArea.growDuringMinutes * 60 * 1000;
-        console.log(deltaTime);
-
         if (data.current.grow) {
-            console.log(1);
-
             data.current.during += deltaTime;
         } else {
-            console.log(2);
-
             data.current.during = deltaTime;
             data.current.lastGrowTime = Date.now();
             data.current.dead = false;
@@ -73,11 +67,11 @@ export default function PlayArea() {
         const key = Date.now().toString();
         const harvestInfo = options.playArea.leekStateImg[data.current.stateIndex];
         const event = new CustomEvent("GameHarvest", {
-            detail: { type: harvestInfo.type, count: 1 },
+            detail: { type: harvestInfo.type, count: harvestInfo.count },
         });
         data.current.harvested = true;
         data.current.lockedState = data.current.stateIndex;
-        document.dispatchEvent(event);
+        document.body.dispatchEvent(event);
         const img = (
             <img
                 className="cut"
@@ -130,6 +124,7 @@ export default function PlayArea() {
                     offset: 0.3,
                     transform: "translateX(-50%) scale(1.5)",
                     filter: "drop-shadow(0px 5px 20px black) invert(75%)",
+                    opacity: 0.5,
                 },
             ],
             {
@@ -240,13 +235,16 @@ export default function PlayArea() {
                     frameChange = true;
                 }
                 //
-                if (stateChange && options.playArea.leekStateImg[data.current.stateIndex].hint && !data.current.harvested) {
+                if (stateChange) {
                     emphasizeImg();
-                    emphasizeImgSpecial();
+                    if (options.playArea.leekStateImg[data.current.stateIndex].hint && !data.current.harvested) {
+                        emphasizeImgSpecial();
+                    }
                 }
             } else {
                 countDownRef.current.innerHTML = "00:00";
                 countDownRef.current.style.opacity = "0";
+                data.current.harvest = true;
             }
             if (now - data.current.lastGrowTime > data.current.during) {
                 data.current.grow = false;
