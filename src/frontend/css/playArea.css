@@ -1,0 +1,57 @@
+.click-area {
+    position           : absolute;
+    width              : 50%;
+    /* height          : 40px; */
+    min-height         : 80px;
+    bottom             : 30px;
+    left               : 50%;
+    transform          : translateX(-50%);
+    transform-origin   : 50% 90%;
+}
+
+.watering-can {
+    position           : absolute;
+    right              : 5px;
+    width              : 104px;
+    height             : 77px;
+    bottom             : 15px;
+    background-image   : url("/images/WateringCan_Empty.png");
+    background-repeat  : no-repeat;
+    background-size    : 104px 77px;
+    background-position: bottom;
+    transform          : scale(0.5);
+
+}
+
+.watering-can.filled {
+    position        : absolute;
+    bottom          : 0;
+    right           : 0;
+    height          : 100%;
+    background-image: url("/images/WateringCan_Filled.png");
+    transition      : all 0.25s ease;
+    transform       : scale(1);
+
+}
+
+.cut {
+    position : absolute;
+    width    : 50%;
+    bottom   : 30px;
+    left     : 50%;
+    transform: translateX(-50%);
+}
+
+.count-down {
+    position        : absolute;
+    left            : 50%;
+    top             : 30px;
+    color           : #fff;
+    font-weight     : 800;
+    transform       : translateX(-50%);
+    font-size       : 2em;
+    transition      : opacity 1s ease;
+    background-color: #00000042;
+    padding         : 2px 10px;
+    border-radius   : 15px;
+}

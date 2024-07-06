@@ -1,0 +1,47 @@
+.hangup-area {
+    flex-grow: 1;
+    position : relative;
+    color    : #fff;
+}
+
+.background {
+    position           : absolute;
+    width              : 100%;
+    height             : 100%;
+    /* z-index            : -1; */
+    /* background-color: #fff; */
+}
+
+.icon-cover {
+    position: absolute;
+    left    : 15px;
+    top     : 15px;
+    height  : 40px;
+    display : flex;
+}
+
+.icon-cover .item {
+    width           : 100px;
+    display         : flex;
+    border-radius   : 5px;
+    background-color: #0000006e;
+    align-items     : center;
+    margin-right    : 5px;
+}
+
+.icon-cover .icon {
+    width              : 32px;
+    height             : 32px;
+    background-size    : contain;
+    background-repeat  : no-repeat;
+    background-position: center;
+    margin-right       : 5px;
+}
+
+.icon.leek {
+    background-image: url("/images/Icon_Leek.png");
+}
+
+.icon.coin{
+    background-image: url("/images/Icon_Coin.png");
+}
