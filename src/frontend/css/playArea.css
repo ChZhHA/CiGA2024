@@ -12,14 +12,14 @@
 .watering-can {
     position           : absolute;
     right              : 5px;
-    width              : 104px;
-    height             : 77px;
-    bottom             : 15px;
-    background-image   : url("/images/WateringCan_Empty.png");
+    width              : 68px;
+    height             : 36px;
+    bottom             : 25px;
+    background-image   : url("/images/shuihuA.png");
     background-repeat  : no-repeat;
-    background-size    : 104px 77px;
+    background-size    : 68px 36px;
     background-position: bottom;
-    transform          : scale(0.5);
+    transform          : scale(0.9);
 
 }
 
@@ -28,7 +28,7 @@
     bottom          : 0;
     right           : 0;
     height          : 100%;
-    background-image: url("/images/WateringCan_Filled.png");
+    background-image: url("/images/shuihuB.png");
     transition      : all 0.25s ease;
     transform       : scale(1);
 

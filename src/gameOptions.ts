@@ -1,4 +1,6 @@
 export default {
+    fps: 30,
+
     playArea: {
         leekStateImg: [
             {
@@ -32,15 +34,27 @@ export default {
         ],
         leekDeadImg: "/images/BG.png",
 
-        fps: 30,
         stateDuring: 20,
         harvestDuring: 15,
         frameDuring: 5,
         growDuringMinutes: 1,
-        wateringCanFillMinutes: 0.1,
+        wateringCanFillMinutes: 1,
         defaultWater: 0.5,
     },
     hangupArea: {
-        beltMoveDuring: 1000,
+        beltMoveDuring: 20,
+        plate: {
+            size: 6,
+            waitDuring: 120,
+            goTransportDuring: 0,
+            readyDuring: 0,
+            mealDuring: 60,
+        },
+        custom: {
+            max: 5,
+            maxCooldown: 120,
+            minCooldown: 50,
+            finishWaitDuring: 30,
+        },
     },
 };

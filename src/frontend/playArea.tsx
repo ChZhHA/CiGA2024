@@ -1,10 +1,8 @@
 import { useEffect, useState, useRef, ReactNode, ReactElement } from "react";
 import "./css/playArea.css";
 import options from "../gameOptions";
+import { getFrameDuring } from "./utils";
 
-function getFrameDuring(frame: number) {
-    return (frame / options.playArea.fps) * 1000;
-}
 export default function PlayArea() {
     const [imgSrc, setImgSrc] = useState("");
     const [effectList, setEffectList] = useState<Array<ReactNode>>([]);
@@ -98,11 +96,14 @@ export default function PlayArea() {
         );
         data.current.effectList.push(img);
         setTimeout(() => {
-            data.current.effectList.splice(data.current.effectList.findIndex((item: ReactElement) => item.key === key));
+            data.current.effectList.splice(
+                data.current.effectList.findIndex((item: ReactElement) => item.key === key),
+                1
+            );
             setEffectList(data.current.effectList.slice());
         }, 300);
         setEffectList(data.current.effectList);
-        resetState();
+        // resetState();
     };
 
     const resetState = () => {
@@ -192,6 +193,15 @@ export default function PlayArea() {
 
             wateringCanRef.current.style.height = `${data.current.water * 100}%`;
 
+            const stateWillChange = now - data.current.lastStateTime > getFrameDuring(options.playArea.stateDuring);
+            if (stateWillChange) {
+                if (data.current.harvested) {
+                    resetState();
+                }
+                data.current.lastStateTime = now;
+                const stateChangeEvent = new CustomEvent("GameStateChange");
+                document.body.dispatchEvent(stateChangeEvent);
+            }
             if (data.current.grow) {
                 const deltaSecond = (data.current.during - (now - data.current.lastGrowTime)) / 1000;
                 countDownRef.current.style.opacity = "1";
@@ -212,7 +222,7 @@ export default function PlayArea() {
                     data.current.harvest = false;
                 }
 
-                if (now - data.current.lastStateTime > getFrameDuring(options.playArea.stateDuring)) {
+                if (stateWillChange) {
                     let subNum = 1;
                     if (data.current.harvested) {
                         subNum = 2;
@@ -220,7 +230,6 @@ export default function PlayArea() {
                     if (data.current.stateIndex < options.playArea.leekStateImg.length - subNum) {
                         data.current.stateIndex++;
                         data.current.frame = 0;
-                        data.current.lastStateTime = now;
                         data.current.lastFrameTime = now;
                         stateChange = true;
                         frameChange = true;
@@ -229,11 +238,7 @@ export default function PlayArea() {
                         resetState();
                     }
                 }
-                if (now - data.current.lastFrameTime > getFrameDuring(options.playArea.frameDuring)) {
-                    data.current.frame++;
-                    data.current.lastFrameTime = now;
-                    frameChange = true;
-                }
+
                 //
                 if (stateChange) {
                     emphasizeImg();
@@ -245,6 +250,11 @@ export default function PlayArea() {
                 countDownRef.current.innerHTML = "00:00";
                 countDownRef.current.style.opacity = "0";
                 data.current.harvest = true;
+            }
+            if (now - data.current.lastFrameTime > getFrameDuring(options.playArea.frameDuring)) {
+                data.current.frame++;
+                data.current.lastFrameTime = now;
+                frameChange = true;
             }
             if (now - data.current.lastGrowTime > data.current.during) {
                 data.current.grow = false;
@@ -287,12 +297,11 @@ export default function PlayArea() {
             <div
                 className="watering-can"
                 onClick={(e) => {
-                    console.log("water");
                     startGame();
                     e.currentTarget.animate(
                         [
-                            { offset: 0.3, transform: "translate(-50px, -10px) rotate(-60deg) scale(0.5) " },
-                            { offset: 0.8, transform: "translate(-40px, -15px) rotate(-60deg) scale(0.5) " },
+                            { offset: 0.3, transform: "translate(-40px, -10px) rotate(-60deg) scale(0.9) " },
+                            { offset: 0.8, transform: "translate(-30px, -15px) rotate(-60deg) scale(0.9) " },
                         ],
                         {
                             duration: 1500,

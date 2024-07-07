@@ -4,6 +4,10 @@
     color    : #fff;
 }
 
+.hangup-area * {
+    -webkit-app-region: drag;
+}
+
 .background {
     position              : absolute;
     width                 : 100%;
@@ -19,7 +23,6 @@
     height             : 40px;
     display            : flex;
     -webkit-user-select: none;
-    -webkit-app-region : drag;
     user-select        : none;
     z-index            : 100;
 }
@@ -68,14 +71,14 @@
 }
 
 .belts {
-    position        : absolute;
-    z-index         : 51;
-    background-image: url("/images/chuansong.png");
-    background-size : 171px 45px;
-    height          : 45px;
-    width           : 100%;
-    bottom          : 0;
-    animation       : belt-move 1s ease-in-out infinite;
+    position           : absolute;
+    z-index            : 51;
+    background-image   : url("/images/chuansong.png");
+    background-size    : 171px 45px;
+    height             : 45px;
+    width              : 100%;
+    bottom             : 0;
+    /* animation       : belt-move 1s ease-in-out infinite; */
 }
 
 @keyframes belt-move {
@@ -88,17 +91,83 @@
     }
 }
 
-.cook-table{
+.cook-table {
     position: absolute;
-    width:146px;
-    bottom: 50px;
-    z-index: 55;
+    width   : 146px;
+    bottom  : 50px;
+    z-index : 55;
 }
 
-.cook{
+.cook {
     position: absolute;
-    z-index: 49;
-    bottom: 80px;
-    left:15px;
-    width:97px;
+    z-index : 49;
+    bottom  : 80px;
+    left    : 15px;
+    width   : 97px;
+}
+
+.custom {
+    position  : absolute;
+    bottom    : 65px;
+    z-index   : 40;
+    left      : 2256px;
+    transition: all 0.25s ease-in-out;
+}
+
+.custom .role {
+    width           : 97px;
+    transform       : translate(-50%, 0);
+    transform-origin: center bottom;
+}
+
+.plate-cover {
+    transform : translate(-50%, -50%);
+    position  : absolute;
+    left      : 85px;
+    bottom    : 5px;
+    z-index   : 80;
+    transition: all 0.25s ease-in-out;
+
+}
+
+.plate {
+    width : 82px;
+    height: 43px;
+}
+
+.jiaozi {
+    position: absolute;
+    width   : 44px;
+    left    : 0;
+    top     : -10px;
+    z-index : 1;
+}
+
+.jiaozi:nth-of-type(2) {
+    left   : 15px;
+    z-index: 0;
+}
+
+.jiaozi:nth-of-type(3) {
+    left   : 25px;
+    top    : -5px;
+    z-index: 5;
+}
+
+.jiaozi:nth-of-type(4) {
+    left   : 15px;
+    top    : 10px;
+    z-index: 10;
+}
+
+.jiaozi:nth-of-type(5) {
+    left   : 25px;
+    top    : 8px;
+    z-index: 9;
+}
+
+.jiaozi:nth-of-type(6) {
+    left   : 5px;
+    top    : 4px;
+    z-index: 9;
 }
