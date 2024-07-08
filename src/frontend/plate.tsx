@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import options from "../gameOptions";
-import { getFrameDuring } from "./utils";
+import { getFrameDuring, getPath } from "./utils";
 enum PlateStatus {
     Wait,
+    Prepare,
     GoTransport,
     Transport,
     Ready,
@@ -48,7 +49,14 @@ export function Plate(props: PlateProps) {
             data.current.lastTime = Date.now();
         }
     };
+    const preparePlateListener = (e: any) => {
+        if (e.detail.position === props.targetPosition && data.current.status === PlateStatus.Wait) {
+            data.current.lastTime = Date.now();
+            data.current.status = PlateStatus.Prepare;
+        }
+    };
     useEffect(() => {
+        document.body.addEventListener("GamePreparePlate", preparePlateListener);
         document.body.addEventListener("GameStateChange", stateChangeListener);
         let handler: number;
         const update = () => {
@@ -57,7 +65,7 @@ export function Plate(props: PlateProps) {
             if (!data.current.nextState) {
                 let statusTime = 0;
                 switch (data.current.status) {
-                    case PlateStatus.Wait:
+                    case PlateStatus.Prepare:
                         {
                             statusTime = options.hangupArea.plate.waitDuring;
                             statusTime = getFrameDuring(statusTime);
@@ -133,17 +141,18 @@ export function Plate(props: PlateProps) {
         return () => {
             cancelAnimationFrame(handler);
             document.body.removeEventListener("GameStateChange", stateChangeListener);
+            document.body.removeEventListener("GamePreparePlate", preparePlateListener);
         };
     }, []);
     return (
         <div className="plate-cover" ref={plateRef} style={{ zIndex: 10000 - props.id }}>
-            <img src="/images/panzi.png" alt="" className="plate"></img>
-            {number > 0 && <img src="/images/jiucaihezi.png" alt="" className="jiaozi"></img>}
-            {number > 1 && <img src="/images/jiucaihezi.png" alt="" className="jiaozi"></img>}
-            {number > 2 && <img src="/images/jiucaihezi.png" alt="" className="jiaozi"></img>}
-            {number > 3 && <img src="/images/jiucaihezi.png" alt="" className="jiaozi"></img>}
-            {number > 4 && <img src="/images/jiucaihezi.png" alt="" className="jiaozi"></img>}
-            {number > 5 && <img src="/images/jiucaihezi.png" alt="" className="jiaozi"></img>}
+            <img src={getPath("/images/panzi.png")} alt="" className="plate"></img>
+            {number > 0 && <img src={getPath("/images/jiucaihezi.png")} alt="" className="jiaozi"></img>}
+            {number > 1 && <img src={getPath("/images/jiucaihezi.png")} alt="" className="jiaozi"></img>}
+            {number > 2 && <img src={getPath("/images/jiucaihezi.png")} alt="" className="jiaozi"></img>}
+            {number > 3 && <img src={getPath("/images/jiucaihezi.png")} alt="" className="jiaozi"></img>}
+            {number > 4 && <img src={getPath("/images/jiucaihezi.png")} alt="" className="jiaozi"></img>}
+            {number > 5 && <img src={getPath("/images/jiucaihezi.png")} alt="" className="jiaozi"></img>}
         </div>
     );
 }

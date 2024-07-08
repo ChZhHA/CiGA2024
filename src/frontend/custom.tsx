@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import options from "../gameOptions";
-import { getFrameDuring } from "./utils";
+import { getFrameDuring, getPath } from "./utils";
 
 interface CustomProps {
     id: number;
@@ -18,11 +18,18 @@ enum CustomStatus {
 export function Custom(props: CustomProps) {
     const customRef = useRef<HTMLDivElement>();
     const roleRef = useRef<HTMLImageElement>();
+    const customHandRef = useRef<HTMLImageElement>();
+    const [showHand, setShowHand] = useState(false);
+    const [imgSrc, setImgSrc] = useState("");
+    const [imgSubSrc, setImgSubSrc] = useState("");
+
     const data = useRef({
         status: CustomStatus.Comein,
         nextState: false,
         lastTime: Date.now(),
         dx: 8,
+        type: Math.floor(Math.random() * options.hangupArea.custom.types.length),
+        frame: 0,
     });
     const onStatusChange = () => {
         if (data.current.status == CustomStatus.Comein) {
@@ -32,7 +39,9 @@ export function Custom(props: CustomProps) {
                 document.body.dispatchEvent(new CustomEvent("GameCustomSit", { detail: { position: props.targetPosition } }));
             } else {
                 data.current.dx -= 1;
-                customRef.current.style.left = 256 + data.current.dx * 171 + "px";
+                const position = 256 + data.current.dx * 171 + "px";
+                customRef.current.style.left = position;
+                customHandRef.current.style.left = position;
             }
         } else if (data.current.status == CustomStatus.Destroy) {
             if (data.current.dx === 10) {
@@ -41,7 +50,9 @@ export function Custom(props: CustomProps) {
                 props.onDestory(props.id);
             } else {
                 data.current.dx += 1;
-                customRef.current.style.left = 256 + data.current.dx * 171 + "px";
+                const position = 342 + data.current.dx * 171 + "px";
+                customRef.current.style.left = position;
+                customHandRef.current.style.left = position;
                 customRef.current.style.zIndex = "0";
             }
         }
@@ -70,10 +81,21 @@ export function Custom(props: CustomProps) {
             );
         }
     };
+    const updateImg = () => {
+        const typeInfo = options.hangupArea.custom.types[data.current.type];
+        const frame = data.current.frame % typeInfo.body.length;
+        setImgSrc(getPath(typeInfo.body[frame]));
+        setImgSubSrc(getPath(typeInfo.hand[frame]));
+    };
+    const onFrameUpdate = (e: any) => {
+        data.current.frame = e.detail.frame;
+        updateImg();
+    };
     useEffect(() => {
         document.body.addEventListener("GameStateChange", onStatusChange);
         document.body.addEventListener("GamePlateReady", onPlateReady);
         document.body.addEventListener("GamePlateFinish", onPlateFinish);
+        document.body.addEventListener("GameFrameUpdate", onFrameUpdate);
         let handler: number;
         const update = () => {
             handler = requestAnimationFrame(update);
@@ -86,8 +108,10 @@ export function Custom(props: CustomProps) {
                     case CustomStatus.Sit:
                         break;
                     case CustomStatus.Eat:
+                        setShowHand(true);
                         break;
                     case CustomStatus.Finish:
+                        setShowHand(false);
                         statusTime = options.hangupArea.custom.finishWaitDuring;
                         statusTime = getFrameDuring(statusTime);
                         if (now - data.current.lastTime > statusTime) {
@@ -103,13 +127,17 @@ export function Custom(props: CustomProps) {
             document.body.removeEventListener("GameStateChange", onStatusChange);
             document.body.removeEventListener("GamePlateReady", onPlateReady);
             document.body.removeEventListener("GamePlateFinish", onPlateFinish);
+            document.body.removeEventListener("GameFrameUpdate", onFrameUpdate);
 
             cancelAnimationFrame(handler);
         };
     }, []);
     return (
-        <div className="custom" ref={customRef}>
-            <img ref={roleRef} className="role" draggable="false" alt="" src="/images/guke-ren1.png"></img>
-        </div>
+        <>
+            <div className="custom" ref={customRef}>
+                <img ref={roleRef} className="role" draggable="false" alt="" src={imgSrc}></img>
+            </div>
+            <img ref={customHandRef} src={imgSubSrc} alt="" className="hand" draggable="false" style={{ display: showHand ? "block" : "none" }}></img>
+        </>
     );
 }

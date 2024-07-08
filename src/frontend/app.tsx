@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import { useEffect, useRef } from "react";
 import PlayArea from "./playArea";
 import HangupArea from "./hangupArea";
 const root = createRoot(document.body);

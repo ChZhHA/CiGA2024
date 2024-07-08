@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, ReactNode, ReactElement } from "react";
 import "./css/playArea.css";
 import options from "../gameOptions";
-import { getFrameDuring } from "./utils";
+import { getFrameDuring, getPath } from "./utils";
 
 export default function PlayArea() {
     const [imgSrc, setImgSrc] = useState("");
@@ -18,6 +18,7 @@ export default function PlayArea() {
         lastStateTime: -1,
         lastFrameTime: -1,
         lastGrowTime: -1,
+        totalFrame: 0,
         grow: false,
         harvest: false,
         harvested: false,
@@ -75,7 +76,7 @@ export default function PlayArea() {
                 className="cut"
                 alt=""
                 key={key}
-                src={harvestInfo.cutImg}
+                src={getPath(harvestInfo.cutImg)}
                 onLoad={(e) => {
                     e.currentTarget.animate(
                         [
@@ -173,7 +174,7 @@ export default function PlayArea() {
             frameUrl = stateInfoList.list[index];
         }
 
-        setImgSrc(frameUrl);
+        setImgSrc(getPath(frameUrl));
     };
 
     useEffect(() => {
@@ -253,11 +254,21 @@ export default function PlayArea() {
             }
             if (now - data.current.lastFrameTime > getFrameDuring(options.playArea.frameDuring)) {
                 data.current.frame++;
+                data.current.totalFrame++;
                 data.current.lastFrameTime = now;
                 frameChange = true;
             }
             if (now - data.current.lastGrowTime > data.current.during) {
                 data.current.grow = false;
+            }
+            if (frameChange) {
+                document.body.dispatchEvent(
+                    new CustomEvent("GameFrameUpdate", {
+                        detail: {
+                            frame: data.current.totalFrame,
+                        },
+                    })
+                );
             }
             updateImg();
         };

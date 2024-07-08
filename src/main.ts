@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain } from "electron";
+import { app, BrowserWindow, screen, ipcMain, session } from "electron";
 import path from "path";
 ipcMain.on("set-ignore-mouse-events", (event, ...args) => {
     // @ts-ignore
@@ -16,6 +16,16 @@ const getScreenSize = () => {
 
 const createWindow = () => {
     // Create the browser window.
+    session.defaultSession.protocol.registerFileProtocol("static", (request: any, callback: any) => {
+        console.log(request.url);
+        console.log(app.getPath("exe"));
+
+        const fileUrl = request.url.replace("static://", "");
+        const filePath = path.join(path.dirname(app.getPath("exe")), "resources", fileUrl);
+        console.log();
+
+        callback(filePath);
+    });
     const size = getScreenSize();
     const mainWindow = new BrowserWindow({
         width: size.width - 100,

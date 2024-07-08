@@ -4,16 +4,11 @@
     color    : #fff;
 }
 
-.hangup-area * {
-    -webkit-app-region: drag;
-}
 
 .background {
-    position              : absolute;
-    width                 : 100%;
-    height                : 100%;
-    /* z-index            : -1; */
-    /* background-color   : #fff; */
+    position: absolute;
+    width   : 100%;
+    height  : 100%;
 }
 
 .icon-cover {
@@ -25,6 +20,8 @@
     -webkit-user-select: none;
     user-select        : none;
     z-index            : 100;
+    -webkit-app-region : drag;
+
 }
 
 .icon-cover .item {
@@ -61,23 +58,27 @@
 }
 
 .table {
-    position        : absolute;
-    z-index         : 50;
-    background-image: url("/images/zhuozi.png");
-    width           : 100%;
-    height          : 90px;
-    background-size : 171px 99px;
-    bottom          : 10px;
+    position          : absolute;
+    z-index           : 50;
+    background-image  : url("/images/zhuozi.png");
+    width             : 100%;
+    height            : 90px;
+    background-size   : 171px 99px;
+    bottom            : 10px;
+    -webkit-app-region: drag;
+
 }
 
 .belts {
-    position           : absolute;
-    z-index            : 51;
-    background-image   : url("/images/chuansong.png");
-    background-size    : 171px 45px;
-    height             : 45px;
-    width              : 100%;
-    bottom             : 0;
+    position          : absolute;
+    z-index           : 51;
+    background-image  : url("/images/chuansong.png");
+    background-size   : 171px 45px;
+    height            : 45px;
+    width             : 100%;
+    bottom            : 0;
+    -webkit-app-region: drag;
+
     /* animation       : belt-move 1s ease-in-out infinite; */
 }
 
@@ -92,32 +93,63 @@
 }
 
 .cook-table {
-    position: absolute;
-    width   : 146px;
-    bottom  : 50px;
-    z-index : 55;
+    position          : absolute;
+    width             : 146px;
+    bottom            : 50px;
+    z-index           : 55;
+    -webkit-app-region: drag;
+
 }
 
 .cook {
+    position          : absolute;
+    z-index           : 49;
+    bottom            : 40px;
+    left              : 60px;
+    width             : 202px;
+    -webkit-app-region: drag;
+    transform         : translate(-50%, 0);
+}
+
+.cook-hand {
+    position : absolute;
+    z-index  : 150;
+    left     : 60px;
+    width    : 202px;
+    transform: translate(-50%, 0);
+
+}
+
+.cook-leek {
     position: absolute;
-    z-index : 49;
-    bottom  : 80px;
-    left    : 15px;
-    width   : 97px;
+    z-index : 100;
+    width   : 80px;
+    bottom  : 65px;
+    left    : 25px;
 }
 
 .custom {
-    position  : absolute;
-    bottom    : 65px;
-    z-index   : 40;
-    left      : 2256px;
-    transition: all 0.25s ease-in-out;
+    position          : absolute;
+    bottom            : 25px;
+    z-index           : 40;
+    left              : 2256px;
+    transition        : all 0.25s ease-in-out;
 }
 
 .custom .role {
-    width           : 97px;
+    width           : 171px;
     transform       : translate(-50%, 0);
     transform-origin: center bottom;
+}
+
+.hand {
+    width     : 171px;
+    position  : absolute;
+    left      : 2256px;
+    transition: all 0.25s ease-in-out;
+    z-index   : 120;
+    bottom    : 25px;
+    transform : translate(-85px, 0);
 }
 
 .plate-cover {
@@ -131,16 +163,16 @@
 }
 
 .plate {
-    width : 82px;
-    height: 43px;
+    width             : 82px;
+    height            : 43px;
 }
 
 .jiaozi {
-    position: absolute;
-    width   : 44px;
-    left    : 0;
-    top     : -10px;
-    z-index : 1;
+    position          : absolute;
+    width             : 44px;
+    left              : 0;
+    top               : -10px;
+    z-index           : 1;
 }
 
 .jiaozi:nth-of-type(2) {

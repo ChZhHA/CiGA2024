@@ -20,12 +20,16 @@ export default function HangupArea() {
     const [plates, setPlates] = useState([]);
     const [customs, setCustoms] = useState([]);
     const data = useRef({
+        coin: 0,
+        leek: 0,
         plates: [],
         custom: [],
         platesWaitQueue: [],
         platePrepare: false,
         nextCustomDuring: -1,
         lastCustomComein: -1,
+        currentPlatePosition: -1,
+        canPrepare: true,
         position: Array.from({ length: options.hangupArea.custom.max }).fill(false),
     });
 
@@ -38,15 +42,8 @@ export default function HangupArea() {
         document.body.addEventListener("GameHarvest", (e) => {
             const { detail } = e as any;
             if (detail.count !== undefined && detail.count > 0) {
-                setLeek((leek) => leek + detail.count);
-                leekRef.current.animate(
-                    [
-                        { offset: 0.3, transform: "scale(1.1) rotate(2.5deg)" },
-                        { offset: 0.5, transform: "scale(1.2) rotate(-2.5deg)" },
-                    ],
-                    500
-                );
-                leekNumRef.current.animate([{ offset: 0.5, transform: "scale(3)" }, {}], { duration: 500, easing: "ease-out" });
+                data.current.leek += detail.count;
+                setLeek(data.current.leek);
             }
         });
         document.body.addEventListener("GamePlatePrepared", (e) => {
@@ -66,15 +63,40 @@ export default function HangupArea() {
                 refreshNextCustomDuring();
             }
             if (now - data.current.lastCustomComein >= getFrameDuring(data.current.nextCustomDuring) && data.current.position.includes(false)) {
-                addCustom(data.current.position.indexOf(false));
+                let index = Math.floor(Math.random() * data.current.position.length);
+                while (data.current.position[index]) {
+                    index = Math.floor(Math.random() * data.current.position.length);
+                }
+                addCustom(index);
                 refreshNextCustomDuring();
                 data.current.lastCustomComein = now;
             }
             if (!data.current.platePrepare && data.current.platesWaitQueue.length > 0) {
                 const position = data.current.platesWaitQueue.shift();
                 addPlate(position);
+                data.current.currentPlatePosition = position;
                 data.current.platePrepare = true;
             }
+
+            if (data.current.currentPlatePosition > -1 && data.current.leek >= options.hangupArea.eachPlateCost) {
+                if (data.current.canPrepare) {
+                    data.current.leek -= options.hangupArea.eachPlateCost;
+                    setLeek(data.current.leek);
+                }
+                data.current.canPrepare = false;
+                document.body.dispatchEvent(
+                    new CustomEvent("GamePreparePlate", {
+                        detail: {
+                            position: data.current.currentPlatePosition,
+                        },
+                    })
+                );
+            }
+        });
+        document.body.addEventListener("GamePlatePrepared", (e) => {
+            const position = (e as any).detail.position;
+            data.current.canPrepare = true;
+            data.current.currentPlatePosition = -1;
         });
         document.body.addEventListener("GameCustomSit", (e) => {
             const position = (e as any).detail.position;
@@ -82,16 +104,10 @@ export default function HangupArea() {
         });
         document.body.addEventListener("GamePay", (e) => {
             const coin = (e as any).detail.coin;
-            setCoin((now) => now + coin);
-            coinRef.current.animate(
-                [
-                    { offset: 0.3, transform: "scale(1.1) rotate(2.5deg)" },
-                    { offset: 0.5, transform: "scale(1.2) rotate(-2.5deg)" },
-                ],
-                500
-            );
-            coinNumRef.current.animate([{ offset: 0.5, transform: "scale(3)" }, {}], { duration: 500, easing: "ease-out" });
+            data.current.coin += coin;
+            setCoin(data.current.coin);
         });
+
         let handler: number;
         let lastFrameTime = Date.now();
         const update = () => {
@@ -105,7 +121,26 @@ export default function HangupArea() {
             cancelAnimationFrame(handler);
         };
     }, []);
-
+    useEffect(() => {
+        coinRef.current.animate(
+            [
+                { offset: 0.3, transform: "scale(1.1) rotate(2.5deg)" },
+                { offset: 0.5, transform: "scale(1.2) rotate(-2.5deg)" },
+            ],
+            500
+        );
+        coinNumRef.current.animate([{ offset: 0.5, transform: "scale(3)" }, {}], { duration: 500, easing: "ease-out" });
+    }, [coin]);
+    useEffect(() => {
+        leekRef.current.animate(
+            [
+                { offset: 0.3, transform: "scale(1.1) rotate(2.5deg)" },
+                { offset: 0.5, transform: "scale(1.2) rotate(-2.5deg)" },
+            ],
+            500
+        );
+        leekNumRef.current.animate([{ offset: 0.5, transform: "scale(3)" }, {}], { duration: 500, easing: "ease-out" });
+    }, [leek]);
     const addCustom = (position: number) => {
         data.current.custom.push({ id: ++id, position });
         data.current.position[position] = true;
@@ -158,6 +193,7 @@ export default function HangupArea() {
                 <div className="table"></div>
                 <div className="belts" ref={beltRef}></div>
                 <Cook />
+
                 {customs.map((item) => {
                     return <Custom key={item.id} targetPosition={item.position} id={item.id} onDestory={destoryCustom} />;
                 })}
