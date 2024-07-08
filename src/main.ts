@@ -4,6 +4,10 @@ ipcMain.on("set-ignore-mouse-events", (event, ...args) => {
     // @ts-ignore
     BrowserWindow.fromWebContents(event.sender).setIgnoreMouseEvents(...args);
 });
+ipcMain.on("set-always-on-top", (event, ...args) => {
+    // @ts-ignore
+    BrowserWindow.fromWebContents(event.sender).setAlwaysOnTop(...args);
+});
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
     app.quit();
@@ -17,13 +21,13 @@ const getScreenSize = () => {
 const createWindow = () => {
     // Create the browser window.
     session.defaultSession.protocol.registerFileProtocol("static", (request: any, callback: any) => {
-        console.log(request.url);
-        console.log(app.getPath("exe"));
-
         const fileUrl = request.url.replace("static://", "");
-        const filePath = path.join(path.dirname(app.getPath("exe")), "resources", fileUrl);
-        console.log();
-
+        let filePath = "";
+        if (process.env.NODE_ENV === "development") {
+            filePath = path.join("./", fileUrl);
+        } else {
+            filePath = path.join(path.dirname(app.getPath("exe")), "resources", fileUrl);
+        }
         callback(filePath);
     });
     const size = getScreenSize();
@@ -49,7 +53,7 @@ const createWindow = () => {
     } else {
         mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
     }
-
+    // mainWindow.alway
     // Open the DevTools.
     // mainWindow.webContents.openDevTools();
     // mainWindow.setIgnoreMouseEvents(true);
