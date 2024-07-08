@@ -16,6 +16,9 @@
     --z-index-plate-cover: 80;
 
     --animation-ease-func: ease-in-out;
+
+    --size-table : 2;
+    --width-table: 171px;
 }
 
 .background {
@@ -74,9 +77,9 @@
     position          : absolute;
     z-index           : var(--z-index-table);
     background-image  : url("/images/zhuozi.png");
-    width             : 100%;
+    width             : calc(var(--width-table) * var(--size-table));
     height            : 90px;
-    background-size   : 171px 99px;
+    background-size   : var(--width-table) 99px;
     bottom            : 10px;
     -webkit-app-region: drag;
 
@@ -86,29 +89,19 @@
     position          : absolute;
     z-index           : var(--z-index-belts);
     background-image  : url("/images/chuansong.png");
-    background-size   : 171px 45px;
+    background-size   : var(--width-table) 45px;
     height            : 45px;
-    width             : 100%;
+    width             : calc(var(--width-table) * var(--size-table));
     bottom            : 0;
     -webkit-app-region: drag;
 }
 
-@keyframes belt-move {
-    80% {
-        background-position: 0px 0;
-    }
-
-    100% {
-        background-position: 171px 0;
-    }
-}
 
 .cook-table {
     position          : absolute;
     width             : 146px;
     bottom            : 50px;
     z-index           : var(--z-index-cook-table);
-    -webkit-app-region: drag;
 }
 
 .cook {
@@ -117,7 +110,6 @@
     bottom            : 40px;
     left              : 60px;
     width             : 202px;
-    -webkit-app-region: drag;
     transform         : translate(-50%, 0);
 }
 
@@ -147,13 +139,13 @@
 }
 
 .custom .role {
-    width           : 171px;
+    width           : var(--width-table);
     transform       : translate(-50%, 0);
     transform-origin: center bottom;
 }
 
 .hand {
-    width     : 171px;
+    width     : var(--width-table);
     position  : absolute;
     left      : 2256px;
     transition: all 0.25s var(--animation-ease-func);

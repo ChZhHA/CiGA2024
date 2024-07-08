@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import options from "../gameOptions";
 import "./css/hangupArea.css";
 import { getFrameDuring } from "./utils";
@@ -19,6 +19,13 @@ export default function HangupArea() {
     const [coin, setCoin] = useState(0);
     const [plates, setPlates] = useState([]);
     const [customs, setCustoms] = useState([]);
+    const [maxPlayer, setMaxPlayer] = useState(options.hangupArea.table.defaultSize);
+    const tableNumber = useMemo(() => maxPlayer + 1, [maxPlayer]);
+
+    useEffect(() => {
+        coverRef.current.style.setProperty("--size-table", tableNumber.toString());
+    }, [tableNumber]);
+
     const data = useRef({
         coin: 0,
         leek: 0,
@@ -30,7 +37,7 @@ export default function HangupArea() {
         lastCustomComein: -1,
         currentPlatePosition: -1,
         canPrepare: true,
-        position: Array.from({ length: options.hangupArea.custom.max }).fill(false),
+        position: Array.from({ length: maxPlayer }).fill(false),
     });
 
     const refreshNextCustomDuring = () => {
@@ -38,6 +45,8 @@ export default function HangupArea() {
     };
 
     useEffect(() => {
+        coverRef.current.style.setProperty("--width-table", options.hangupArea.table.width + "px");
+
         data.current.lastCustomComein = Date.now();
         document.body.addEventListener("GameHarvest", (e) => {
             const { detail } = e as any;
@@ -53,8 +62,8 @@ export default function HangupArea() {
             beltRef.current.animate(
                 [
                     { offset: 0, backgroundPosition: "0 0" },
-                    { offset: 0.2, backgroundPosition: "171px 0" },
-                    { offset: 1, backgroundPosition: "171px 0" },
+                    { offset: 0.2, backgroundPosition: `${options.hangupArea.table.width}px 0` },
+                    { offset: 1, backgroundPosition: `${options.hangupArea.table.width}px 0` },
                 ],
                 { duration: getFrameDuring(options.hangupArea.beltMoveDuring), easing: "ease-in-out" }
             );

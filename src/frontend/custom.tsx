@@ -39,7 +39,7 @@ export function Custom(props: CustomProps) {
                 document.body.dispatchEvent(new CustomEvent("GameCustomSit", { detail: { position: props.targetPosition } }));
             } else {
                 data.current.dx -= 1;
-                const position = 256 + data.current.dx * 171 + "px";
+                const position = 256 + data.current.dx * options.hangupArea.table.width + "px";
                 customRef.current.style.left = position;
                 customHandRef.current.style.left = position;
             }
@@ -50,7 +50,7 @@ export function Custom(props: CustomProps) {
                 props.onDestory(props.id);
             } else {
                 data.current.dx += 1;
-                const position = 342 + data.current.dx * 171 + "px";
+                const position = 342 + data.current.dx * options.hangupArea.table.width + "px";
                 customRef.current.style.left = position;
                 customHandRef.current.style.left = position;
                 customRef.current.style.zIndex = "0";

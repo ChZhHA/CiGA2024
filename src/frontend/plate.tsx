@@ -33,12 +33,12 @@ export function Plate(props: PlateProps) {
                 data.current.status = PlateStatus.Ready;
             } else {
                 data.current.dx += 1;
-                plateRef.current.style.left = 85 + data.current.dx * 171 + "px";
+                plateRef.current.style.left = 85 + data.current.dx * options.hangupArea.table.width + "px";
             }
         }
         if (data.current.status == PlateStatus.Destroy) {
             data.current.dx += 1;
-            plateRef.current.style.left = 85 + data.current.dx * 171 + "px";
+            plateRef.current.style.left = 85 + data.current.dx * options.hangupArea.table.width + "px";
             if (data.current.dx > 10) {
                 props.onDestory(props.id);
                 data.current.status = PlateStatus.Destoryed;
